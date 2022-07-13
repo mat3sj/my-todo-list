@@ -21,3 +21,4 @@ class DailyWorkoutListView(View):
             response += f"""{workout.activity.name}
             """
         return HttpResponse(response)
+
