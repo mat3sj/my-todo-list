@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path
 
 from . import views
+from .views import DailyWorkoutListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('workout/', DailyWorkoutListView.as_view()),
     path('', views.index, name='index'),
 
 ]
