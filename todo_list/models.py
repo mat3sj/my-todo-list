@@ -1,5 +1,8 @@
+import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -12,6 +15,7 @@ class WorkoutActivity(models.Model):
     class Category(models.IntegerChoices):
         REPETITIONS = 1, 'Repetitions'
         SECONDS = 2, 'Seconds'
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     category = models.IntegerField(choices=Category.choices,
@@ -29,7 +33,7 @@ class DailyTraining(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity = models.ForeignKey(WorkoutActivity, on_delete=models.CASCADE)
     the_series = models.CharField(max_length=200)
-    date = models.DateField()
+    date = models.DateField(default=now())
     done = models.BooleanField(default=False)
 
     def __str__(self):
@@ -41,6 +45,19 @@ class WaterIncome(models.Model):
     Model to hold water income
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField()
+    date = models.DateField(default=now())
     volume = models.FloatField()
 
+
+class LongTermTask(models.Model):
+    """
+    Model for keeping long term tasks
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    done = models.BooleanField(default=False)
+    value = models.IntegerField(default=1)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name

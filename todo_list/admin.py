@@ -17,9 +17,15 @@ class DailyTrainingAdmin(admin.ModelAdmin):
 class WaterIncomeAdmin(admin.ModelAdmin):
     list_display = ('volume', 'date', 'user')
     list_filter = ('date', 'user')
-    sortable_by = ('date', )
+    sortable_by = ('date',)
+
+
+class LongTermTaskAdmin(admin.ModelAdmin):
+    list_display = ('name', 'value', 'done', 'user')
+    list_filter = ('user', 'done')
 
 
 admin.site.register(models.WorkoutActivity, WorkoutActivityAdmin)
 admin.site.register(models.DailyTraining, DailyTrainingAdmin)
 admin.site.register(models.WaterIncome, WaterIncomeAdmin)
+admin.site.register(models.LongTermTask, LongTermTaskAdmin)

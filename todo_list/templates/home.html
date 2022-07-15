@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Home page</h1>
+
+<ul>
+    <a href="/workout/add">Add pushups</a>
+</ul>
+<h2>Long term tasks</h2>
+<form method="post" action="/">
+    {% csrf_token %}
+    <ul>
+        {% for task in long_term_tasks %}
+        <li><input type="checkbox" , value="clicked" , name="c{{task.id}}">{{task.name}} - {{task.value}}</li>
+        {% endfor %}
+        <li><input type="text" name="new"><input type="number" name="new-value" value=1>
+            <button type="submit" name="newItem" value="newItem">Add Item</button>
+        </li>
+    </ul>
+    <button type="submit", name="save", value="save">Save</button>
+</form>
+
+{% if todays_tasks %}
+<h2>Today's tasks</h2>
+<ul>
+    {% for task in todays_tasks %}
+    <li><input type="checkbox" value="clicked" name="c{{item.id}}">{{task.name}}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h2>Today's water Income</h2>
+<strong>{{todays_water}} l</strong>
+<ul>
+    <a href="/water/add">Add water</a>
+</ul>
+
+{% endblock %}
+
