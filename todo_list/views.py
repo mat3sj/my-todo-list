@@ -1,7 +1,6 @@
 import datetime
 from typing import Dict
 
-from django.contrib.auth.models import User
 from django.shortcuts import render
 
 from django.http import HttpResponse, HttpResponseRedirect
@@ -9,6 +8,7 @@ from django.views import View
 
 from todo_list import forms
 from todo_list import models
+from todo_list.forms import RegisterForm
 
 
 def index(request):
@@ -108,3 +108,21 @@ class WaterIncomeView(View):
             todays_water_income.save()
 
         return HttpResponseRedirect("/")
+
+
+class RegisterView(View):
+    def get(self, request):
+        return render(request, 'user/register.html',
+                      {'form': RegisterForm()})
+
+    def post(self, request):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/")
+        else:
+            return HttpResponseRedirect("/register")
+
+
+class LoginView(View):
+    pass

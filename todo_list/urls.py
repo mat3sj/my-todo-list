@@ -23,6 +23,8 @@ urlpatterns = [
     path('workout/add', views.PlanWorkoutView.as_view()),
     path('water/add', views.WaterIncomeView.as_view()),
     path('workout/', views.DailyWorkoutListView.as_view()),
+    path('register/', views.RegisterView.as_view()),
+    path('login/', views.LoginView.as_view()),
     path('', views.HomeView.as_view(), name='home'),
 
 ]

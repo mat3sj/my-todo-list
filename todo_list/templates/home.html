@@ -9,15 +9,27 @@
 <h2>Long term tasks</h2>
 <form method="post" action="/">
     {% csrf_token %}
-    <ul>
-        {% for task in long_term_tasks %}
-        <li><input type="checkbox" , value="clicked" , name="c{{task.id}}">{{task.name}} - {{task.value}}</li>
-        {% endfor %}
-        <li><input type="text" name="new"><input type="number" name="new-value" value=1>
-            <button type="submit" name="newItem" value="newItem">Add Item</button>
-        </li>
-    </ul>
-    <button type="submit", name="save", value="save">Save</button>
+
+    {% for task in long_term_tasks %}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <div class="input-group-text">
+                <input type="checkbox" value="clicked" name="c{{task.id}}">
+            </div>
+        </div>
+        <input type="text" value="{{task.name}} - {{task.value}}" class="form-control">
+
+    </div>
+    {% endfor %}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <input type="text" name="new">
+            <input type="number" name="new-value" value=1>
+            <button type="submit" name="newItem" value="newItem" class="btn btn-success">Add Item</button>
+        </div>
+
+    </div>
+    <button type="submit" name="save" value="save" class="btn btn-success">Save</button>
 </form>
 
 {% if todays_tasks %}
