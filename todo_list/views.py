@@ -1,6 +1,8 @@
 import datetime
 from typing import Dict
 
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render
 
 from django.http import HttpResponse, HttpResponseRedirect
@@ -88,7 +90,7 @@ class PlanWorkoutView(View):
 class WaterIncomeView(View):
     def get(self, request):
         form = forms.WaterIncomeForm()
-        return render(request, 'water/water.html', {'form': form})
+        return render(request, 'water/water_add.html', {'form': form})
 
     def post(self, request):
         form = forms.WaterIncomeForm(request.POST)
@@ -112,7 +114,7 @@ class WaterIncomeView(View):
 
 class RegisterView(View):
     def get(self, request):
-        return render(request, 'user/register.html',
+        return render(request, 'registration/register.html',
                       {'form': RegisterForm()})
 
     def post(self, request):
@@ -124,5 +126,73 @@ class RegisterView(View):
             return HttpResponseRedirect("/register")
 
 
-class LoginView(View):
-    pass
+class WaterView(View):
+    def get(self, request):
+        return render(request, 'water/water.html')
+
+
+class TodayConsumptionView(View):
+    def get(self, request, date):
+        if date == 'today':
+            date = datetime.date.today()
+        consumption_dict = _get_consumption_categories(user=request.user,
+                                                       date=date)
+        return render(request, 'consumption/today_consumption.html',
+                      {'categories': consumption_dict})
+
+    def post(self, request, date):
+        if date == 'today':
+            date = datetime.date.today()
+        categories = models.ConsumptionCategory.objects.filter(
+            user=request.user)
+        for category in categories:
+            daily = _get_daily_consumption(user=request.user, category=category, date=date)
+            volumes = category.volumes.split(',')
+            for volume in volumes:
+                form_field_name = f'{category.name}-{volume}'
+                if request.POST.get(form_field_name):
+                    number = request.POST.get(form_field_name)
+                    daily.volume += float(volume) * int(
+                        request.POST.get(form_field_name))
+            daily.save()
+
+        consumption_dict = _get_consumption_categories(user=request.user)
+        return render(request, 'consumption/today_consumption.html',
+                      {'categories': consumption_dict})
+
+
+def _get_consumption_categories(user, date=datetime.date.today()) -> dict:
+    consumption_dict = {}
+
+    categories = models.ConsumptionCategory.objects.filter(
+        user=user)
+    for category in categories:
+        try:
+            daily = models.DailyConsumption.objects.get(
+                date=date, user=user,
+                category=category)
+        except models.DailyConsumption.DoesNotExist:
+            daily = models.DailyConsumption.objects.create(
+                user=user, category=category)
+        volumes = category.volumes.split(',')
+        today_volume = int(daily.volume) if isinstance(daily.volume,
+                                                       int) or daily.volume.is_integer() else daily.volume
+        consumption_dict[category.name] = {
+            'name': category.name,
+            'volumes': volumes,
+            'unit': category.unit,
+            'today': today_volume
+        }
+
+    return consumption_dict
+
+
+def _get_daily_consumption(user: User, category: models.ConsumptionCategory,
+                           date=datetime.date.today()) -> models.DailyConsumption:
+    try:
+        return models.DailyConsumption.objects.get(
+            date=date, user=user,
+            category=category)
+    except models.DailyConsumption.DoesNotExist:
+        return models.DailyConsumption.objects.create(
+            user=user, category=category, date=date)

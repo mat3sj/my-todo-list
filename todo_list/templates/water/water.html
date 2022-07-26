@@ -1,13 +1,15 @@
+
+
 {% extends 'base.html' %}
 
+{% block title %}
+<title>Water</title>
+{% endblock %}
+
+{% block page_title %}<h1 class="mt-2">Water</h1>{% endblock %}
+
 {% block content %}
-<h1>Water Income</h1>
 
-<form method="post" action="/water/add">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit" , name="save">Save</button>
-</form>
-
+<p><a href="/water/add">Add water</a></p>
 
 {% endblock %}
