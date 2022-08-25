@@ -1,5 +1,6 @@
 import datetime
 from typing import Dict
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
@@ -146,7 +147,8 @@ class TodayConsumptionView(View):
         categories = models.ConsumptionCategory.objects.filter(
             user=request.user)
         for category in categories:
-            daily = _get_daily_consumption(user=request.user, category=category, date=date)
+            daily = _get_daily_consumption(user=request.user, category=category,
+                                           date=date)
             volumes = category.volumes.split(',')
             for volume in volumes:
                 form_field_name = f'{category.name}-{volume}'
