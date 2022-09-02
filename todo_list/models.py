@@ -22,6 +22,9 @@ class WorkoutActivity(models.Model):
                                    default=Category.REPETITIONS)
     series = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name_plural = 'Workout Activities'
+
     def __str__(self):
         return self.name
 
@@ -61,6 +64,24 @@ class LongTermTask(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class TodoList(models.Model):
+    """
+    Classical to do list
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    done = models.BooleanField(default=False)
+
+
+
+class TodoListTask(models.Model):
+    todo_list = models.ForeignKey(TodoList, on_delete=models.CASCADE)
+    task_name = models.CharField(max_length=200)
+    details = models.TextField()
+    done = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class ConsumptionCategory(models.Model):

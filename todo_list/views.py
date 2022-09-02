@@ -12,6 +12,7 @@ from django.views import View
 from todo_list import forms
 from todo_list import models
 from todo_list.forms import RegisterForm
+from todo_list.models import TodoList, TodoListTask
 
 
 def index(request):
@@ -161,6 +162,56 @@ class TodayConsumptionView(View):
         consumption_dict = _get_consumption_categories(user=request.user)
         return render(request, 'consumption/today_consumption.html',
                       {'categories': consumption_dict})
+
+
+class TodoListListView(View):
+
+    def get(self, request):
+        todo_lists = TodoList.objects.filter(user=request.user)
+
+        return render(request, 'todo_list/todo_list_list.html',
+                      {'todo_lists': todo_lists})
+
+    def post(self, request):
+        if request.POST.get('newTodoList'):
+            name = request.POST.get('new')
+            models.TodoList.objects.create(name=name, user=request.user)
+        todo_lists = TodoList.objects.filter(user=request.user)
+
+        return render(request, 'todo_list/todo_list_list.html',
+                      {'todo_lists': todo_lists})
+
+
+class TodoListDetailView(View):
+    def get(self, request, todo_list_id):
+        if TodoList.objects.filter(pk=todo_list_id, user=request.user).exists():
+            tasks = TodoListTask.objects.filter(
+                todo_list=todo_list_id).order_by('done', 'updated_at')
+            return render(
+                request, 'todo_list/todo_list_detail.html',
+                {
+                    'tasks': tasks,
+                    'todo_list': models.TodoList.objects.get(pk=todo_list_id)
+                })
+
+    def post(self, request, todo_list_id):
+        if request.POST.get('newTask'):
+            name = request.POST.get('new')
+            models.TodoListTask.objects.create(
+                task_name=name,
+                todo_list=models.TodoList.objects.get(pk=todo_list_id))
+        tasks = TodoListTask.objects.filter(
+            todo_list=todo_list_id).order_by('done', 'updated_at')
+        for task in tasks:
+            if request.POST.get('task-' + str(task.id)) == 'clicked':
+                task.done = True
+                task.save()
+        return render(
+            request, 'todo_list/todo_list_detail.html',
+            {
+                'tasks': tasks,
+                'todo_list': models.TodoList.objects.get(pk=todo_list_id)
+            })
 
 
 def _get_consumption_categories(user, date=datetime.date.today()) -> dict:

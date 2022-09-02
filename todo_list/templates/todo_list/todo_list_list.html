@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    My DoDoo lists
+{% endblock %}
+
+{% block page_title %}<h1 class="mt-2">My DoDoo lists</h1>{% endblock %}
+
+{% block content %}
+    {% for todo_list in todo_lists %}
+        <p><a href="/todo_list/{{ todo_list.id }}">{{ todo_list.name }}</a></p>
+    {% endfor %}
+
+<form method="post" action="/todo_list/">
+    {% csrf_token %}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <input type="text" name="new" >
+            <button type="submit" name="newTodoList" value="newTodoList" class="btn btn-success">Add ToDo list</button>
+        </div>
+
+    </div>
+    <button type="submit" name="save" value="save" class="btn btn-success">Save</button>
+</form>
+
+{% endblock %}

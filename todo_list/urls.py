@@ -26,6 +26,8 @@ urlpatterns = [
     path('water/add', views.WaterIncomeView.as_view()),
     path('workout/', views.DailyWorkoutListView.as_view()),
     path('register/', views.RegisterView.as_view()),
+    path('todo_list/<int:todo_list_id>', views.TodoListDetailView.as_view()),
+    path('todo_list/', views.TodoListListView.as_view()),
     path('', views.HomeView.as_view(), name='home'),
     path('', include("django.contrib.auth.urls")),
 
