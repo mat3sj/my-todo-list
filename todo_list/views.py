@@ -168,18 +168,30 @@ class TodoListListView(View):
 
     def get(self, request):
         todo_lists = TodoList.objects.filter(user=request.user)
+        todo_lists_list = []
+
+        for todo_list in todo_lists:
+            number_of_tasks = models.TodoListTask.objects.filter(
+                todo_list=todo_list
+            ).count()
+
+            number_of_done_tasks = models.TodoListTask.objects.filter(
+                todo_list=todo_list, done=True
+            ).count()
+            todo_lists_list.append({
+                'the_list': todo_list,
+                'num_of_tasks': number_of_tasks,
+                'num_of_done_tasks': number_of_done_tasks
+            })
 
         return render(request, 'todo_list/todo_list_list.html',
-                      {'todo_lists': todo_lists})
+                      {'todo_lists': todo_lists_list})
 
     def post(self, request):
         if request.POST.get('newTodoList'):
             name = request.POST.get('new')
             models.TodoList.objects.create(name=name, user=request.user)
-        todo_lists = TodoList.objects.filter(user=request.user)
-
-        return render(request, 'todo_list/todo_list_list.html',
-                      {'todo_lists': todo_lists})
+        return self.get(request)
 
 
 class TodoListDetailView(View):

@@ -8,7 +8,7 @@
 
 {% block content %}
     {% for todo_list in todo_lists %}
-        <p><a href="/todo_list/{{ todo_list.id }}">{{ todo_list.name }}</a></p>
+        <p><a href="/todo_list/{{ todo_list.the_list.id }}">{{ todo_list.the_list.name }} ({{ todo_list.num_of_done_tasks }}/{{ todo_list.num_of_tasks }})</a></p>
     {% endfor %}
 
 <form method="post" action="/todo_list/">
