@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+
+{% block page_title %}<h1 class="mt-2">Home page</h1>{% endblock %}
+
+{% block content %}
+
+<ul>
+    <a href="/workout/add">Add pushups</a>
+</ul>
+<h2>Long term tasks</h2>
+<form method="post" action="/">
+    {% csrf_token %}
+
+    {% for task in long_term_tasks %}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <div class="input-group-text">
+                <input type="checkbox" value="clicked" name="c{{task.id}}">
+            </div>
+        </div>
+        <input type="text" value="{{task.name}} - {{task.value}}" class="form-control">
+
+    </div>
+    {% endfor %}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <input type="text" name="new">
+            <input type="number" name="new-value" value=1>
+            <button type="submit" name="newItem" value="newItem" class="btn btn-success">Add Item</button>
+        </div>
+
+    </div>
+    <button type="submit" name="save" value="save" class="btn btn-success">Save</button>
+</form>
+
+{% if todays_tasks %}
+<h2>Today's tasks</h2>
+<ul>
+    {% for task in todays_tasks %}
+    <li><input type="checkbox" value="clicked" name="c{{item.id}}">{{task.name}}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h2>Today's water Income</h2>
+<strong>{{todays_water}} l</strong>
+<ul>
+    <a href="/water/add">Add water</a>
+</ul>
+
+{% endblock %}
+
