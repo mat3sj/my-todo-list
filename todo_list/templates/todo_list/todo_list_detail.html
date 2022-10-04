@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ todo_list.name }}
+{% endblock %}
+
+{% block page_title %}<h1 class="mt-2">{{ todo_list.name }}</h1>{% endblock %}
+
+{% block content %}
+    <form method="post" action="/todo_list/{{ todo_list.id }}">
+        {% csrf_token %}
+        {% for task in tasks %}
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox" value="clicked"
+                               name="task-{{ task.id }}"
+                               {% if task.done %}checked{% endif %}>
+                    </div>
+                </div>
+                <input type="text" value="{{ task.task_name }}"
+                       class="form-control">
+
+            </div>
+        {% endfor %}
+
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <input type="text" name="new">
+                <button type="submit" name="newTask" value="newTask"
+                        class="btn btn-success">Add Task
+                </button>
+            </div>
+
+        </div>
+
+        <button type="submit" name="save" class="btn btn-success">Save</button>
+    </form>
+
+
+{% endblock %}
