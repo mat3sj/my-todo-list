@@ -13,11 +13,6 @@ class CreateWorkoutPlan(forms.Form):
     # todo add activity
 
 
-class WaterIncomeForm(forms.Form):
-    half_a_liter = forms.IntegerField(label='0.5 l', initial=0)
-    three_dl = forms.IntegerField(label='0.3 l', initial=0)
-
-
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()
 

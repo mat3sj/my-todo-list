@@ -16,18 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+import todo_list.views.consumption
+import todo_list.views.training
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('workout/add', views.PlanWorkoutView.as_view()),
-    path('water', views.WaterView.as_view()),
-    path('consumption/<str:date>', views.TodayConsumptionView.as_view()),
-    path('water/add', views.WaterIncomeView.as_view()),
-    path('workout/', views.DailyWorkoutListView.as_view()),
+    path('workout/add', todo_list.views.training.PlanWorkoutView.as_view()),
+    path('consumption/<str:date>', todo_list.views.consumption.DayConsumptionView.as_view()),
+    # path('training/<str:date>', views.training.DayTrainingView.as_view()),
+    path('workout/', todo_list.views.training.DailyWorkoutListView.as_view()),
     path('register/', views.RegisterView.as_view()),
-    path('todo_list/<int:todo_list_id>', views.TodoListDetailView.as_view()),
-    path('todo_list/', views.TodoListListView.as_view()),
+    path('todo_list/<int:todo_list_id>', todo_list.views.tasks.TodoListDetailView.as_view()),
+    path('todo_list/', todo_list.views.tasks.TodoListListView.as_view()),
     path('', views.HomeView.as_view(), name='home'),
     path('', include("django.contrib.auth.urls")),
 

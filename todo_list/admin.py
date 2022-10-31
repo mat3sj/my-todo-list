@@ -1,5 +1,8 @@
 from django.contrib import admin
 
+import todo_list.models.consumption
+import todo_list.models.tasks
+import todo_list.models.training
 # Register your models here.
 from todo_list import models
 
@@ -12,12 +15,6 @@ class WorkoutActivityAdmin(admin.ModelAdmin):
 class DailyTrainingAdmin(admin.ModelAdmin):
     list_display = ('activity', 'date', 'the_series', 'done')
     list_filter = ('date', 'user')
-
-
-class WaterIncomeAdmin(admin.ModelAdmin):
-    list_display = ('volume', 'date', 'user')
-    list_filter = ('date', 'user')
-    sortable_by = ('date',)
 
 
 class LongTermTaskAdmin(admin.ModelAdmin):
@@ -37,9 +34,8 @@ class DailyConsumptionAdmin(admin.ModelAdmin):
     sortable_by = ('date',)
 
 
-admin.site.register(models.WorkoutActivity, WorkoutActivityAdmin)
-admin.site.register(models.DailyTraining, DailyTrainingAdmin)
-admin.site.register(models.WaterIncome, WaterIncomeAdmin)
-admin.site.register(models.LongTermTask, LongTermTaskAdmin)
-admin.site.register(models.ConsumptionCategory, ConsumptionCategoryAdmin)
-admin.site.register(models.DailyConsumption, DailyConsumptionAdmin)
+admin.site.register(todo_list.models.training.WorkoutActivity, WorkoutActivityAdmin)
+admin.site.register(todo_list.models.training.DailyTraining, DailyTrainingAdmin)
+admin.site.register(todo_list.models.tasks.LongTermTask, LongTermTaskAdmin)
+admin.site.register(todo_list.models.consumption.ConsumptionCategory, ConsumptionCategoryAdmin)
+admin.site.register(todo_list.models.consumption.DailyConsumption, DailyConsumptionAdmin)
